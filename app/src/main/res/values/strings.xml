@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Expense Recorder</string>
+    <string name="action_clear">Clear All</string>>
+
+    <string name="button_add">ADD</string>
+    <string name="button_delete">DELETE</string>
+    <string name="button_confirm">CONFIRM</string>>
+    <string name="button_cancel">CANCEL</string>
+    <string name="hint_add_amount">Enter amount spent</string>
+
+    <string name="MESSAGE_invalid_amount">Please enter a valid amount</string>
+    <string name="MESSAGE_db_cleared">All data erased!</string>
+
+</resources>

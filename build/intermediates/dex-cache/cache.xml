@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/home/adbento/AndroidStudioProjects/ExpenseRecorder/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
+        <dex dex="/home/adbento/AndroidStudioProjects/ExpenseRecorder/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_33dfa52023a596b5789123a7c6062c7f2b487423/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/home/adbento/AndroidStudioProjects/ExpenseRecorder/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.3"
+        sha1="0e7601742a88b9a7bbf947e717c8ffbafa6999b1">
+        <dex dex="/home/adbento/AndroidStudioProjects/ExpenseRecorder/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_76fa4e4dec443a02247fec79620a2791da09b142/classes.dex" />
+    </item>
+
+</items>
