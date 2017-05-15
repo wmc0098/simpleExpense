@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity {
     private void setListViewFromDb() {
         // Construct the data source
         ArrayList<ExpenseEntry> arrayOfExpense = ApplicationSingleton.getLogic().getEntriesFromDb();
-// Create the adapter to convert the array to views
+    // Create the adapter to convert the array to views
         final ExpenseListAdapter adapter = new ExpenseListAdapter(this, arrayOfExpense);
-// Attach the adapter to a ListView
+    // Attach the adapter to a ListView
         ListView expenseListView = (ListView) findViewById(R.id.list_content);
         expenseListView.setAdapter(adapter);
 

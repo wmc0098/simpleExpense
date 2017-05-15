@@ -14,8 +14,8 @@ import na.expenserecorder.model.ExpenseEntry;
  */
 
 public class ExpenseDataSource {
-    private SQLiteDatabase myDb;
-    private ExpenseDatabaseHelper myDbHelper;
+    private SQLiteDatabase expenseDb;
+    private ExpenseDatabaseHelper expenseDbHelper;
     private String[] allColumns = {
             ExpenseDatabaseHelper.COLUMN_ID,
             ExpenseDatabaseHelper.COLUMN_DATE,
@@ -24,21 +24,21 @@ public class ExpenseDataSource {
     };
 
     public ExpenseDataSource(Context context) {
-        myDbHelper = new ExpenseDatabaseHelper(context);
+        expenseDbHelper = new ExpenseDatabaseHelper(context);
         openDb();
     }
 
     public void openDb() {
-        myDb = myDbHelper.getWritableDatabase();
+        expenseDb = expenseDbHelper.getWritableDatabase();
     }
 
     public void close() {
-        myDbHelper.close();
+        expenseDbHelper.close();
     }
 
     public long insertByRaw(String date, String category, float amount) {
         ContentValues values = createValues(date, category, amount);
-        long insertedId = myDb.insert(ExpenseDatabaseHelper.TABLE_NAME, null, values);
+        long insertedId = expenseDb.insert(ExpenseDatabaseHelper.TABLE_NAME, null, values);
         return insertedId;
     }
 
@@ -59,20 +59,20 @@ public class ExpenseDataSource {
     public void deleteEntryByKey(long id) {
         System.out.println("Entry deleted with id: " + id);
         String[] whereArgs = {String.valueOf(id)};
-        myDb.delete(myDbHelper.TABLE_NAME, ExpenseDatabaseHelper.COLUMN_ID
+        expenseDb.delete(expenseDbHelper.TABLE_NAME, ExpenseDatabaseHelper.COLUMN_ID
                 + " = ?", whereArgs);
     }
 
     public void editEntry(ExpenseEntry entryToEdit, String date, String category, float amount) {
         ContentValues values = createValues(date, category, amount);
         String[] selectionArgs = {String.valueOf(entryToEdit.getEntryKey())};
-        myDb.update(myDbHelper.TABLE_NAME, values, ExpenseDatabaseHelper.COLUMN_ID
+        expenseDb.update(expenseDbHelper.TABLE_NAME, values, ExpenseDatabaseHelper.COLUMN_ID
                 + " = ?", selectionArgs);
     }
 
     public ArrayList<ExpenseEntry> getAllEntries() {
         ArrayList<ExpenseEntry> allEntries = new ArrayList<>();
-        Cursor cursor = myDb.query(ExpenseDatabaseHelper.TABLE_NAME,
+        Cursor cursor = expenseDb.query(ExpenseDatabaseHelper.TABLE_NAME,
                 allColumns, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -80,7 +80,6 @@ public class ExpenseDataSource {
             allEntries.add(entry);
             cursor.moveToNext();
         }
-        // close the cursor
         cursor.close();
         return allEntries;
     }
@@ -102,6 +101,6 @@ public class ExpenseDataSource {
 
 
     public int deleteAll() {
-        return myDb.delete(ExpenseDatabaseHelper.TABLE_NAME, null, null);
+        return expenseDb.delete(ExpenseDatabaseHelper.TABLE_NAME, null, null);
     }
 }

@@ -1,6 +1,8 @@
 package na.expenserecorder.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -10,9 +12,22 @@ import java.util.Date;
 
 public class TimeUtils {
 
-    private static final String DATE_FORMAT = "dd-MM-yyyy";
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     public static String getCurrentDateString() {
         return new SimpleDateFormat(DATE_FORMAT).format(new Date());
     }
+
+    public static Calendar getCalendarFromString(String dateString) throws ParseException {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        cal.setTime(sdf.parse(dateString));
+        return cal;
+    }
+
+    public static String getStringFromCalendar(Calendar dateCalendar) {
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        return sdf.format(dateCalendar.getTime());
+    }
+
 }
