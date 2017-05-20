@@ -25,7 +25,7 @@ public class ExpenseDatabaseHelper extends SQLiteOpenHelper {
                 "CREATE TABLE " + TABLE_NAME + " ( " +
                         COLUMN_ID + " INTEGER primary key autoincrement, " +
                         COLUMN_DATE + " TEXT, " +
-                        COLUMN_CATEGORY + " TEXT, " +
+                        COLUMN_CATEGORY + " LONG, " +
                         COLUMN_AMOUNT + " SINGLE" +
                 ");";
 

@@ -18,4 +18,12 @@ public class Category {
     public void setCategoryKey(long categoryKey) {
         this.categoryKey = categoryKey;
     }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }

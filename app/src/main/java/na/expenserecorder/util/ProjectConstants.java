@@ -17,4 +17,5 @@ public class ProjectConstants {
 
     public static final String BUNDLE_KEY_DATE_STRING = "date";
 
+    public static final String MESSAGE_KEY_NOT_FOUND = "Key is not found in database.";
 }

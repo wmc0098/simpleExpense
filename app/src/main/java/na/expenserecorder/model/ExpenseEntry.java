@@ -12,14 +12,15 @@ public class ExpenseEntry implements Parcelable {
     private long entryKey;
     private String time;
     private float amount;
-    private String category;
+    private long category;
 
     public ExpenseEntry() {}
 
-    public ExpenseEntry(long key, String time, float amount) {
+    public ExpenseEntry(long key, String time, float amount, long category) {
         this.setEntryKey(key);
         this.setTime(time);
         this.setAmount(amount);
+        this.setCategory(category);
     }
 
     public long getEntryKey() {
@@ -46,11 +47,11 @@ public class ExpenseEntry implements Parcelable {
         this.amount = amount;
     }
 
-    public String getCategory() {
+    public long getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(long category) {
         this.category = category;
     }
 
@@ -59,7 +60,7 @@ public class ExpenseEntry implements Parcelable {
         entryKey = in.readLong();
         time = in.readString();
         amount = in.readFloat();
-        category = in.readString();
+        setCategory(in.readLong());
     }
 
     public static final Creator<ExpenseEntry> CREATOR = new Creator<ExpenseEntry>() {
@@ -84,7 +85,7 @@ public class ExpenseEntry implements Parcelable {
         dest.writeLong(entryKey);
         dest.writeString(time);
         dest.writeFloat(amount);
-        dest.writeString(category);
+        dest.writeLong(getCategory());
     }
 
 }

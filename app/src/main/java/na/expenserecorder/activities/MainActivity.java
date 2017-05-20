@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setListViewFromDb() {
         // Construct the data source
-        ArrayList<ExpenseEntry> arrayOfExpense = ApplicationSingleton.getLogic().getEntriesFromDb();
+        ArrayList<ExpenseEntry> arrayOfExpense = ApplicationSingleton.getLogic().getExpenseFromDb();
     // Create the adapter to convert the array to views
         final ExpenseListAdapter adapter = new ExpenseListAdapter(this, arrayOfExpense);
     // Attach the adapter to a ListView
@@ -85,10 +85,15 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        // TODO make this a switch case
         if (id == R.id.action_clear) {
-            ApplicationSingleton.getLogic().clearDb();
+            ApplicationSingleton.getLogic().clearExpenseDb();
             GeneralUtils.showShortToastMessage(getApplicationContext(), getString(R.string.MESSAGE_db_cleared));
             setListViewFromDb();
+            return true;
+        } else if (id == R.id.action_category) {
+            // TODO open category manager activity to manage categories
+            onClickCategoryManager();
             return true;
         }
 
@@ -96,10 +101,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickAdd() {
-        //getIntent : currentDate?
-        //jump to AddActivity
         Intent jumpToAddActivity = new Intent(this, AddActivity.class);
         startActivityForResult(jumpToAddActivity, ProjectConstants.REQUEST_ADD_ENTRY);
+    }
+
+    public void onClickCategoryManager() {
+        Intent jumpToCategoryManager = new Intent(this, CategoryManagerActivity.class);
+        startActivity(jumpToCategoryManager);
     }
 
     @Override
@@ -137,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
             TextView tvAmount = (TextView) convertView.findViewById(R.id.entry_amount);
             // Populate the data into the template view using the data object
             tvTime.setText(entry.getTime());
-            tvCat.setText(entry.getCategory());
+            tvCat.setText(ApplicationSingleton.getLogic().getCategoryNameByKey(entry.getCategory()));
             tvAmount.setText(Float.toString(entry.getAmount()));
             // Return the completed view to render on screen
             return convertView;

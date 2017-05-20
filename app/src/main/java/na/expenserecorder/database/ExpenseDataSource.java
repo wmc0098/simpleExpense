@@ -36,13 +36,13 @@ public class ExpenseDataSource {
         expenseDbHelper.close();
     }
 
-    public long insertByRaw(String date, String category, float amount) {
+    public long insertByRaw(String date, long category, float amount) {
         ContentValues values = createValues(date, category, amount);
         long insertedId = expenseDb.insert(ExpenseDatabaseHelper.TABLE_NAME, null, values);
         return insertedId;
     }
 
-    private ContentValues createValues(String date, String category, float amount) {
+    private ContentValues createValues(String date, long category, float amount) {
         ContentValues values = new ContentValues();
         values.put(ExpenseDatabaseHelper.COLUMN_DATE, date);
         // TODO enumerate category
@@ -63,7 +63,7 @@ public class ExpenseDataSource {
                 + " = ?", whereArgs);
     }
 
-    public void editEntry(ExpenseEntry entryToEdit, String date, String category, float amount) {
+    public void editEntry(ExpenseEntry entryToEdit, String date, long category, float amount) {
         ContentValues values = createValues(date, category, amount);
         String[] selectionArgs = {String.valueOf(entryToEdit.getEntryKey())};
         expenseDb.update(expenseDbHelper.TABLE_NAME, values, ExpenseDatabaseHelper.COLUMN_ID
@@ -93,7 +93,7 @@ public class ExpenseDataSource {
 
         entry.setEntryKey(cursor.getLong(keyIndex));
         entry.setTime(cursor.getString(dateIndex));
-        entry.setCategory(cursor.getString(catIndex));
+        entry.setCategory(cursor.getLong(catIndex));
         entry.setAmount(cursor.getFloat(amtIndex));
 
         return entry;

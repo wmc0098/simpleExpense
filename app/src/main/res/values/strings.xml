@@ -1,18 +1,23 @@
 <resources>
     <string name="app_name">Expense Recorder</string>
-    <string name="action_clear">Clear All</string>>
+    <string name="action_clear">Clear All</string>
+    <string name="action_category">Manage Categories</string>>
 
     <string name="button_add">ADD</string>
     <string name="button_delete">DELETE</string>
-    <string name="button_confirm">CONFIRM</string>>
+    <string name="button_confirm">CONFIRM</string>
     <string name="button_cancel">CANCEL</string>
     <string name="hint_add_amount">Enter amount spent</string>
+    <string name="desc_edit">Edit this entry</string>
+    <string name="desc_delete">Delete this entry</string>
 
     <string name="MESSAGE_invalid_amount">Please enter a valid amount</string>
     <string name="MESSAGE_invalid_date">Not a a valid date! (yyyy-MM-dd)</string>
+    <string name="MESSAGE_category_already_exists">Adding canceled, this category already exists!</string>
     <string name="MESSAGE_db_cleared">All data erased!</string>
 
     <string name="hint_amount">How much did you spend?</string>
     <string name="hint_category">What did you buy?</string>
+    <string name="title_activity_category_manager">CategoryManagerActivity</string>
 
 </resources>

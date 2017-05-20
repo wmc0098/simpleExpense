@@ -88,19 +88,20 @@ public class EditActivity extends AppCompatActivity {
 
     public void onClickDelete() {
         //call logic.deletebyId
-        ApplicationSingleton.getLogic().getDataSource().deleteEntry(entryToEdit);
+        ApplicationSingleton.getLogic().getExpenseDataSource().deleteEntry(entryToEdit);
         //jump back to main and request to refresh
         jumpToMainAndRefresh();
     }
 
     public void onClickConfirm() {
         //edit item and update by ID inside DB
-        String category = "editedCat";
+        //TODO refactor categories here
+        long category = 0;
         try {
             float userAmount = Float.valueOf(amountText.getText().toString());
             String userDate = dateText.getText().toString();
             // TODO implement edit in db
-            ApplicationSingleton.getLogic().getDataSource().editEntry(entryToEdit, userDate, category, userAmount);
+            ApplicationSingleton.getLogic().getExpenseDataSource().editEntry(entryToEdit, userDate, category, userAmount);
             //jump back to main
             jumpToMainAndRefresh();
         } catch (NumberFormatException e) {
