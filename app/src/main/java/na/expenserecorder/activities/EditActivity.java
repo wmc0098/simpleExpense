@@ -3,19 +3,24 @@ package na.expenserecorder.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import na.expenserecorder.R;
 import na.expenserecorder.application.ApplicationSingleton;
+import na.expenserecorder.model.ExpenseCategory;
 import na.expenserecorder.model.ExpenseEntry;
 import na.expenserecorder.util.DatePickerFragment;
 import na.expenserecorder.util.GeneralUtils;
 import na.expenserecorder.util.ProjectConstants;
 import na.expenserecorder.util.TimeUtils;
 
+import static na.expenserecorder.R.layout.support_simple_spinner_dropdown_item;
 import static na.expenserecorder.util.ProjectConstants.BUNDLE_KEY_DATE_STRING;
 
 public class EditActivity extends AppCompatActivity {
@@ -28,6 +33,7 @@ public class EditActivity extends AppCompatActivity {
     private Button confirmButton;
     private EditText amountText;
     // TODO the category spinner
+    Spinner categorySpinner;
     EditText dateText;
 
     @Override
@@ -73,13 +79,31 @@ public class EditActivity extends AppCompatActivity {
             }
         });
 
+        // set spinner
+        categorySpinner = (Spinner) findViewById(R.id.spinner_category);
+        setCategorySpinner(); //load cat from db
+
         setViewValues();
     }
 
     private void setViewValues() {
         // display current amount and date of entryToEdit
         amountText.setText(String.valueOf(entryToEdit.getAmount()));
-        dateText.setText(entryToEdit.getTime());
+        dateText.setText(entryToEdit.getDate());
+    }
+
+    public void setCategorySpinner() {
+        // test spinner
+        ArrayList<ExpenseCategory> categories = ApplicationSingleton.getLogic().getCategoryFromDb();
+
+        ArrayAdapter<ExpenseCategory> spinnerAdapter =
+                new ArrayAdapter<ExpenseCategory>(this, support_simple_spinner_dropdown_item, categories);
+
+        categorySpinner.setAdapter(spinnerAdapter);
+
+        // read default category from incoming entry
+        int selectedPos = spinnerAdapter.getPosition(entryToEdit.getCategory());
+        categorySpinner.setSelection(selectedPos);
     }
 
     public void onClickCancel() {
@@ -88,20 +112,17 @@ public class EditActivity extends AppCompatActivity {
 
     public void onClickDelete() {
         //call logic.deletebyId
-        ApplicationSingleton.getLogic().getExpenseDataSource().deleteEntry(entryToEdit);
+        ApplicationSingleton.getLogic().deleteEntry(entryToEdit);
         //jump back to main and request to refresh
         jumpToMainAndRefresh();
     }
 
     public void onClickConfirm() {
-        //edit item and update by ID inside DB
-        //TODO refactor categories here
-        long category = 0;
         try {
-            float userAmount = Float.valueOf(amountText.getText().toString());
-            String userDate = dateText.getText().toString();
-            // TODO implement edit in db
-            ApplicationSingleton.getLogic().getExpenseDataSource().editEntry(entryToEdit, userDate, category, userAmount);
+            float newAmount = Float.valueOf(amountText.getText().toString());
+            String newDate = dateText.getText().toString();
+            ExpenseCategory newCat = (ExpenseCategory) categorySpinner.getSelectedItem();
+            ApplicationSingleton.getLogic().editEntry(entryToEdit, newDate, newCat, newAmount);
             //jump back to main
             jumpToMainAndRefresh();
         } catch (NumberFormatException e) {

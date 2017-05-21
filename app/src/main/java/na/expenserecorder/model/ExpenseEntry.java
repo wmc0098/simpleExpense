@@ -10,15 +10,14 @@ import android.os.Parcelable;
 public class ExpenseEntry implements Parcelable {
 
     private long entryKey;
-    private String time;
+    private String date;
     private float amount;
-    private long category;
+    private ExpenseCategory category;
 
     public ExpenseEntry() {}
 
-    public ExpenseEntry(long key, String time, float amount, long category) {
-        this.setEntryKey(key);
-        this.setTime(time);
+    public ExpenseEntry(String date, float amount, ExpenseCategory category) {
+        this.setDate(date);
         this.setAmount(amount);
         this.setCategory(category);
     }
@@ -31,12 +30,12 @@ public class ExpenseEntry implements Parcelable {
         this.entryKey = entryKey;
     }
 
-    public String getTime() {
-        return time;
+    public String getDate() {
+        return date;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public float getAmount() {
@@ -47,20 +46,19 @@ public class ExpenseEntry implements Parcelable {
         this.amount = amount;
     }
 
-    public long getCategory() {
+    public ExpenseCategory getCategory() {
         return category;
     }
 
-    public void setCategory(long category) {
+    public void setCategory(ExpenseCategory category) {
         this.category = category;
     }
 
     // Parcelable methods
     protected ExpenseEntry(Parcel in) {
         entryKey = in.readLong();
-        time = in.readString();
+        date = in.readString();
         amount = in.readFloat();
-        setCategory(in.readLong());
     }
 
     public static final Creator<ExpenseEntry> CREATOR = new Creator<ExpenseEntry>() {
@@ -83,9 +81,7 @@ public class ExpenseEntry implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(entryKey);
-        dest.writeString(time);
+        dest.writeString(date);
         dest.writeFloat(amount);
-        dest.writeLong(getCategory());
     }
-
 }

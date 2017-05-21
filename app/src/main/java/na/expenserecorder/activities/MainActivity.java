@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import na.expenserecorder.R;
 import na.expenserecorder.application.ApplicationSingleton;
@@ -87,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         // TODO make this a switch case
         if (id == R.id.action_clear) {
-            ApplicationSingleton.getLogic().clearExpenseDb();
-            GeneralUtils.showShortToastMessage(getApplicationContext(), getString(R.string.MESSAGE_db_cleared));
+            int count = ApplicationSingleton.getLogic().clearExpenseDb();
+            GeneralUtils.showShortToastMessage(getApplicationContext(), count + " entries deleted!");
             setListViewFromDb();
             return true;
         } else if (id == R.id.action_category) {
@@ -117,22 +118,49 @@ public class MainActivity extends AppCompatActivity {
                 || requestCode == ProjectConstants.REQUEST_EDIT_ENTRY) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                // The user picked a contact.
-                // The Intent's data Uri identifies which contact was selected.
-
-                // Do something with the contact here (bigger example below)
                 setListViewFromDb();
             }
         }
     }
 
     public static class ExpenseListAdapter extends ArrayAdapter<ExpenseEntry> {
-        public ExpenseListAdapter(Context context, ArrayList<ExpenseEntry> users) {
-            super(context, 0, users);
+        private Context context;
+        List<ExpenseEntry> entries;
+
+        public ExpenseListAdapter(Context context, List<ExpenseEntry> entries) {
+            super(context, R.layout.entry_expense_list, entries);
+            this.context = context;
+            this.entries = entries;
+        }
+
+        private class ViewHolder {
+            TextView tvTime;
+            TextView tvCat;
+            TextView tvAmount;
         }
 
         @Override
+        public int getCount() {
+            return entries.size();
+        }
+
+        @Override
+        public ExpenseEntry getItem(int position) {
+            return entries.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+//        public ExpenseListAdapter(Context context, ArrayList<ExpenseEntry> users) {
+//            super(context, 0, users);
+//        }
+
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
             // Get the data item for this position
             ExpenseEntry entry = getItem(position);
             // Check if an existing view is being reused, otherwise inflate the view
@@ -144,11 +172,12 @@ public class MainActivity extends AppCompatActivity {
             TextView tvCat = (TextView) convertView.findViewById(R.id.entry_category);
             TextView tvAmount = (TextView) convertView.findViewById(R.id.entry_amount);
             // Populate the data into the template view using the data object
-            tvTime.setText(entry.getTime());
-            tvCat.setText(ApplicationSingleton.getLogic().getCategoryNameByKey(entry.getCategory()));
+            tvTime.setText(entry.getDate());
+            tvCat.setText(entry.getCategory().getCategoryName());
             tvAmount.setText(Float.toString(entry.getAmount()));
             // Return the completed view to render on screen
             return convertView;
         }
+
     }
 }

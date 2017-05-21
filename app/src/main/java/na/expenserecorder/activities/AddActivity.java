@@ -1,7 +1,5 @@
 package na.expenserecorder.activities;
 
-import android.content.Intent;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,11 +14,12 @@ import java.util.Calendar;
 
 import na.expenserecorder.R;
 import na.expenserecorder.application.ApplicationSingleton;
-import na.expenserecorder.model.Category;
+import na.expenserecorder.model.ExpenseCategory;
 import na.expenserecorder.util.DatePickerFragment;
 import na.expenserecorder.util.GeneralUtils;
-import na.expenserecorder.util.ProjectConstants;
 import na.expenserecorder.util.TimeUtils;
+
+import static na.expenserecorder.R.layout.support_simple_spinner_dropdown_item;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -30,7 +29,7 @@ public class AddActivity extends AppCompatActivity {
     private EditText amountText;
     // TODO the category spinner
     Spinner categorySpinner;
-    protected Category categorySelected;
+//    protected ExpenseCategory expenseCategorySelected;
     EditText dateEditText;
 
     @Override
@@ -73,27 +72,25 @@ public class AddActivity extends AppCompatActivity {
 
     public void setCategorySpinner() {
         // test spinner
-        categorySelected = new Category();
-        ArrayList<String> categories = ApplicationSingleton.getLogic().getCategoryStringsFromDb();
+//        expenseCategorySelected = new ExpenseCategory();
+        ArrayList<ExpenseCategory> categories = ApplicationSingleton.getLogic().getCategoryFromDb();
 
-        ArrayAdapter<String> spinnerAdapter =
-                new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, categories);
+        ArrayAdapter<ExpenseCategory> spinnerAdapter =
+                new ArrayAdapter<ExpenseCategory>(this, support_simple_spinner_dropdown_item, categories);
 
         categorySpinner.setAdapter(spinnerAdapter);
 
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String catSelected = parent.getItemAtPosition(position).toString();
-                AddActivity.this.categorySelected =
-                        ApplicationSingleton.getLogic().getCategoryByName(catSelected);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                ExpenseCategory catSelected = (ExpenseCategory) parent.getItemAtPosition(position);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
     }
 
@@ -101,9 +98,9 @@ public class AddActivity extends AppCompatActivity {
         try {
             float amount = Float.valueOf(this.amountText.getText().toString());
             String time = this.dateEditText.getText().toString();
-            long categoryKey = categorySelected.getCategoryKey();
+            ExpenseCategory cat = (ExpenseCategory) categorySpinner.getSelectedItem();
             //add entry to Db
-            ApplicationSingleton.getLogic().addExpense(time, categoryKey, amount);
+            ApplicationSingleton.getLogic().addExpense(time, cat, amount);
             //go back to main
             setResult(RESULT_OK);
             finish();

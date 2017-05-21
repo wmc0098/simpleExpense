@@ -3,10 +3,11 @@ package na.expenserecorder.application;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
-import na.expenserecorder.database.CategoryDataSource;
-import na.expenserecorder.database.ExpenseDataSource;
-import na.expenserecorder.model.Category;
+import na.expenserecorder.database.ExpenseCategoryDAO;
+import na.expenserecorder.database.ExpenseDAO;
+import na.expenserecorder.model.ExpenseCategory;
 import na.expenserecorder.model.ExpenseEntry;
 
 /**
@@ -14,64 +15,56 @@ import na.expenserecorder.model.ExpenseEntry;
  */
 
 public class Logic {
-    private ExpenseDataSource expenseDataSource;
-    private CategoryDataSource categoryDataSource;
+    private ExpenseDAO expenseDataSource;
+    private ExpenseCategoryDAO categoryDataSource;
     
     public Logic(Context context) {
-        expenseDataSource = new ExpenseDataSource(context);
-        categoryDataSource = new CategoryDataSource(context);
-        // TODO delete when category adding is done
-        addCategory("testCAT1");
-        addCategory("testCAT2");
-        addCategory("testCAT3");
-        // test step 1: each expense will have one category, saved as the category's key
-        //              when category is read, string is loaded from catDb, it can be changed but not deleted
-        //              category cannot be edited, for now
+        expenseDataSource = new ExpenseDAO(context);
+        categoryDataSource = new ExpenseCategoryDAO(context);
+        if (categoryDataSource.hasNoCategory()) {
+            categoryDataSource.addTestCategories();
+        }
     }
 
     // expense methods
-    public ExpenseDataSource getExpenseDataSource() {
-        return expenseDataSource;
+
+    public void addExpense(String date, ExpenseCategory cat, float amount) {
+        ExpenseEntry entry = new ExpenseEntry(date, amount, cat);
+        expenseDataSource.insert(entry);
     }
 
-    public void addExpense(String date, long category, float amount) {
-        expenseDataSource.insertByRaw(date, category, amount);
+    public void editEntry(ExpenseEntry entryToEdit, String date, ExpenseCategory cat, float amount) {
+        entryToEdit.setDate(date);
+        entryToEdit.setCategory(cat);
+        entryToEdit.setAmount(amount);
+        expenseDataSource.update(entryToEdit);
     }
 
-    public void clearExpenseDb() {
-        expenseDataSource.deleteAll();
+    public void deleteEntry(ExpenseEntry entry) {
+        expenseDataSource.delete(entry);
+    }
+
+    public int clearExpenseDb() {
+        return expenseDataSource.clear();
     }
 
     public ArrayList<ExpenseEntry> getExpenseFromDb() {
-        return expenseDataSource.getAllEntries();
+        return expenseDataSource.getExpenseEntries();
     }
 
     // category methods
-    public CategoryDataSource getCategoryDataSource() {
-        return categoryDataSource;
-    }
 
     public void addCategory(String name) {
-        categoryDataSource.addCategoryByString(name);
+        ExpenseCategory newCat = new ExpenseCategory(name);
+        categoryDataSource.insert(newCat);
     }
 
     public void clearCategoryDb() {
-        categoryDataSource.deleteAll();
+        categoryDataSource.clearCategories();
     }
 
-    public ArrayList<Category> getCategoryFromDb() {
-        return categoryDataSource.getAllCategories();
+    public ArrayList<ExpenseCategory> getCategoryFromDb() {
+        return categoryDataSource.getCategories();
     }
 
-    public ArrayList<String> getCategoryStringsFromDb() {
-        return categoryDataSource.getAllCategoryStrings();
-    }
-
-    public Category getCategoryByName(String name) {
-        return categoryDataSource.getCategoryByName(name);
-    }
-
-    public String getCategoryNameByKey(long key) {
-        return categoryDataSource.getNameByKey(key);
-    }
 }
